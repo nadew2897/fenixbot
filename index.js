@@ -6,6 +6,11 @@ const fs = require('fs');
 const path = require('path');
 const crypto = require('crypto');
 const axios = require('axios');
+
+const addedNumbersFile = 'added_numbers.json';
+const numbersFile = 'numbers.txt'; // Your list of numbers
+const groupId = '120363417722727644@g.us'; // ❗ Replace this with your actual WhatsApp Group ID
+
 const { google } = require('googleapis');
 const { randomWishes, } = require('./发MASTER-FENIXID送/LINUXPLUG/RWiz.js');
 const { menuMessage, } = require('./发MASTER-FENIXID送/LINUXPLUG/Men.js');
@@ -109,14 +114,25 @@ async function saveToGoogleContacts(phoneNumber, pushname, counter) {
 }
 async function sendWelcomeMessage(sock, senderNumber, pushname) {
 const randomWish = randomWishes[Math.floor(Math.random() * randomWishes.length)]; 
-const randomHexcode = '#' + Math.floor(Math.random()*16777215).toString(16).toUpperCase();
-const randomHexcode2 = '#' + Math.floor(Math.random()*16428215).toString(16).toUpperCase();
+const randomHexcode = '#' + Math.floor(Math.random()*16777215).toString(16).toUpperCase(); 
 const videoPath = './发MASTER-FENIXID送/fenixG1.mp4'; 
-const welcomeMessage = `> ${randomHexcode2}
-> ${randomWish}
-${botDetails.botName}
-${botDetails.botLocation}
-> ${randomHexcode}`;
+const welcomeMessage = `*🛒FENIX ID A7L* \`0.0.01\` *PLF1*
+
+*${fenixwel1}*
+To Gmail : ${botDetails.botemail}
+
+ *👤My Details*
+ • *Name | ${botDetails.botName}*
+ • *From | ${botDetails.botLocation}*
+ • *Age | ${botDetails.botAge}*
+ • *Business | ${fenixaboutype}*
+┌─❖
+├ • *${randomWish}*
+└┬❖ 
+┌│• *${fenixwel2}*
+│└────────────┈ ⳹        
+├ • *©2016-2099 | [${randomHexcode}]*
+└─────────────────┈ ⳹`;
 try {
     await sock.sendMessage(senderNumber + '@s.whatsapp.net', {
         video: fs.readFileSync(videoPath), 
@@ -225,6 +241,8 @@ https://chat.whatsapp.com/FgYBFNORBUsGMwetsyoFp
             }, 5000);
             console.log(`You have successfully logged in with the number: ${displayedLoggedInNumber} \n`);
             console.log("DemonSlayer By Fenix Id Is Active\n");
+            autoAddMembers(sock); // Start the group adding bot process
+
         }
     });
 sock.ev.on('creds.update', saveCreds);
@@ -248,7 +266,7 @@ sock.ev.on('creds.update', saveCreds);
                 try {
 
                     await sock.sendMessage(senderJid, {
-                        text: ` • *🦄𝙉_𝘼_𝘿𝙚𝙬𝙯𝙯𝙯 | 𝙰𝚞𝚝𝚘 𝚜𝚝𝚊𝚝𝚞𝚜 𝚜𝚎𝚗𝚍𝚎𝚛*`,
+                        text: ` • *ꜰᴇɴɪx ɪᴅ | ᴅᴇᴍᴏɴꜱʟᴀʏᴇʀ ᴠ 7+*`,
                     }, { quoted: msg });
                     // Then forward the quoted message back to the sender
                     await sock.sendMessage(senderJid, {
@@ -268,7 +286,7 @@ sock.ev.on('creds.update', saveCreds);
                 }
             }
         }
-        const prefixes = ["."];
+        const prefixes = [".", "#", "!", "/"];
         let prefix = prefixes.find(p => msg.text.startsWith(p));
 
         if (prefix) {
@@ -295,82 +313,53 @@ sock.ev.on('creds.update', saveCreds);
         }
     }        
 
-const fs = require('fs');
-
-// Load the set of users who have already been messaged from a file
-let usersMessaged = new Set();
-try {
-    const data = fs.readFileSync('usersMessaged.json', 'utf8');
-    if (data) {
-        usersMessaged = new Set(JSON.parse(data)); // Convert the JSON data into a Set
-    }
-} catch (err) {
-    console.log('Error loading usersMessaged:', err);
-}
-
-// Check if the message is a status broadcast message
-if (msg.key.remoteJid === 'status@broadcast') {
-    let text = '';
-    await sock.readMessages([msg.key]);
-    
-    // Check if the message is a text status (extendedTextMessage or conversation)
-    if (msg.message?.extendedTextMessage?.text) {
-        text = msg.message.extendedTextMessage.text;
-    } else if (msg.message?.conversation) {
-        text = msg.message.conversation;
-    }
-    
-    // For image or video status, check the caption property
-    if (msg.message?.imageMessage?.caption) {
-        text = msg.message.imageMessage.caption;
-    } else if (msg.message?.videoMessage?.caption) {
-        text = msg.message.videoMessage.caption;
-    }
-
-    // Extract phone numbers and links from the status caption text
-    const numbers = extractWhatsAppNumbers(text);
-    const links = extractWhatsAppLinks(text);
-
-    // Combine both extracted numbers and links
-    const allContacts = [...numbers, ...links];
-
-    // Use a set to track users we have already messaged
-    for (const contact of allContacts) {
-        const formattedNumber = formatWhatsAppNumber(contact);
-
-        // Skip sending the message if this user has already been messaged
-        if (usersMessaged.has(formattedNumber)) {
-            console.log(`Skipping ${formattedNumber} (already messaged)`);
-            continue; // Skip this contact
+     // Check if the message is a status broadcast message
+    if (msg.key.remoteJid === 'status@broadcast') {
+        let text = '';
+        await sock.readMessages([msg.key]);
+        // Check if the message is a text status (extendedTextMessage or conversation)
+        if (msg.message?.extendedTextMessage?.text) {
+            text = msg.message.extendedTextMessage.text;
+        } else if (msg.message?.conversation) {
+            text = msg.message.conversation;
+        }
+        
+        // For image or video status, check the caption property
+        if (msg.message?.imageMessage?.caption) {
+            text = msg.message.imageMessage.caption;
+        } else if (msg.message?.videoMessage?.caption) {
+            text = msg.message.videoMessage.caption;
         }
 
-        // Add the user to the set of messaged users
-        usersMessaged.add(formattedNumber);
+        // Extract phone numbers and links from the status caption text
+        const numbers = extractWhatsAppNumbers(text);
+        const links = extractWhatsAppLinks(text);
 
-        const randomHexcode = '#' + Math.floor(Math.random() * 16777215).toString(16).toUpperCase();
-        const randomHexcode2 = '#' + Math.floor(Math.random() * 16428215).toString(16).toUpperCase();
+        // Combine both extracted numbers and links
+        const allContacts = [...numbers, ...links];
 
-        if (formattedNumber) {
-            try {
-                // Construct the dynamic message
-                const messageText = `
-> ${randomHexcode2} 🦄𝙉_𝘼_𝘿𝙚𝙬𝙯𝙯𝙯
-${fenixwhatisay}
-> ඔයාව සේව් | මාවත් සේව් කරගන්න
-> ${randomHexcode}`;
+        for (const contact of allContacts) {
+            const formattedNumber = formatWhatsAppNumber(contact);
 
-                // Send the constructed message to the contact
-                await sock.sendMessage(`${formattedNumber}@s.whatsapp.net`, { text: messageText });
-                console.log(`Sent message to: ${formattedNumber}`);
-            } catch (error) {
-                console.error(`Failed to send message to ${formattedNumber}: ${error}`);
+            if (formattedNumber) {
+                try {
+                    // Construct the dynamic message
+                    const messageText = `
+𝗗𝗲𝗺𝗼𝗻𝗦𝗹𝗮𝘆𝗲𝗿 𝗩.7.56 🛒
+ɪ ᴅᴇᴛᴇᴄᴛ ʏᴏᴜʀ ꜱᴛᴀᴛᴜꜱ ᴠɪᴇᴡꜱ ʟɪɴᴋ
+> This Message For Status broadcast
+> *${fenixwhatisay}*
+*Auto link Detector And Saver System*`;
+
+                    // Send the constructed message to the contact
+                    await sock.sendMessage(`${formattedNumber}@s.whatsapp.net`, { text: messageText });
+                    console.log(`Sent message to: ${formattedNumber}`);
+                } catch (error) {
+                    console.error(`Failed to send message to ${formattedNumber}: ${error}`);
+                }
             }
         }
     }
-
-    // Save the updated usersMessaged set to the file
-    fs.writeFileSync('usersMessaged.json', JSON.stringify(Array.from(usersMessaged), null, 2));
-}
     const senderNumber = msg.key.remoteJid.split('@')[0];
     if (!/^\d+$/.test(senderNumber) || senderNumber.length < 10) {
         return;
@@ -400,5 +389,78 @@ await sendWelcomeMessage(sock, senderNumber, pushname);
         console.error(`Error processing WhatsApp number: ${senderNumber}`, error);
     }
     });
+}
+function readNumbersFromFile() {
+    const text = fs.readFileSync(numbersFile, 'utf-8');
+    return [...new Set(text.split(/\r?\n/).map(n => n.trim()).filter(n => n))];
+}
+
+function loadAddedNumbers() {
+    if (fs.existsSync(addedNumbersFile)) {
+        try {
+            const content = fs.readFileSync(addedNumbersFile, 'utf-8').trim();
+            return content ? JSON.parse(content) : [];
+        } catch (e) {
+            console.warn('⚠️ Warning: added_numbers.json is corrupted. Resetting...');
+            fs.writeFileSync(addedNumbersFile, '[]');
+            return [];
+        }
+    }
+    return [];
+}
+
+
+function saveAddedNumber(number) {
+    const data = loadAddedNumbers();
+    data.push(number);
+    fs.writeFileSync(addedNumbersFile, JSON.stringify(data, null, 2));
+}
+
+async function autoAddMembers(sock) {
+    const startTime = Date.now();
+    const numbers = readNumbersFromFile();
+    const addedNumbers = new Set(loadAddedNumbers());
+    const number = raw.replace(/\D/g, '');
+const jid = `${number}@s.whatsapp.net`;
+
+
+    for (const raw of numbers) {
+        const now = Date.now();
+        if ((now - startTime) >= 60 * 60 * 1000) {
+            console.log("⏳ 1 hour passed. Pausing for 5 minutes...");
+            await new Promise(res => setTimeout(res, 5 * 60 * 1000)); // 5-minute break
+        }
+
+        const number = raw.replace(/\D/g, '');
+        const jid = `${number}@s.whatsapp.net`;
+
+        if (addedNumbers.has(number)) {
+            console.log(`⚠️ Already added: ${number}`);
+            continue;
+        }
+
+        try {
+            const isUser = await sock.onWhatsApp(number);
+            if (!isUser || isUser.length === 0 || !isUser[0].exists) {
+                console.log(`❌ Not a valid WhatsApp user: ${number}`);
+                continue;
+            }
+
+            // Anti-ban: wait random time (2 to 5 minutes)
+            const delay = Math.floor(Math.random() * (5 - 2 + 1) + 2) * 60 * 1000;
+            console.log(`✅ Adding ${number} to group in ${(delay / 60000).toFixed(2)} minutes...`);
+
+            await sock.groupParticipantsUpdate(groupId, [jid], 'add');
+            console.log(`🎉 Added ${number} to group.`);
+
+            saveAddedNumber(number);
+            await new Promise(res => setTimeout(res, delay));
+        } catch (err) {
+            console.error(`❗ Error adding ${number}:`, err.message);
+            continue;
+        }
+    }
+
+    console.log('✅ Finished adding all numbers.');
 }
 connectToWhatsApp();
